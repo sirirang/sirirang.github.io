@@ -15,10 +15,11 @@ var template = {
       </body>
       </html>`;
   },
-  list: function(flielist) {
+  list: function(topics) {
     var list = `<ul>`;
-    for (var i = 0; i < flielist.length; i++) {
-      list = list + `<li><a href="/?id=${flielist[i]}">${flielist[i]}</a></li>`;
+    for (var i = 0; i < topics.length; i++) {
+      list =
+        list + `<li><a href="/?id=${topics[i].id}">${topics[i].title}</a></li>`;
     }
     list = list + `</ul>`;
     return list;
