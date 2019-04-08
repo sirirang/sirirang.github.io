@@ -194,14 +194,46 @@ var app = http.createServer(function(request, response) {
       );
     });
   } else if (pathName === "/update") {
-    fs.readdir("./data", function(err, flielist) {
-      fs.readFile(`data/${title}`, "utf8", function(err, data) {
-        var title = queryData.id;
-        var list = template.list(flielist);
-        var description = data;
-        var html = template.HTML(
-          title,
-          `
+    // fs.readdir("./data", function(err, flielist) {
+    //   fs.readFile(`data/${title}`, "utf8", function(err, data) {
+    //     var title = queryData.id;
+    //     var list = template.list(flielist);
+    //     var description = data;
+    //     var html = template.HTML(
+    //       title,
+    //       `
+    //       <form action="/update_process" method="POST">
+    //         <input type="hidden" name="id" value="${title}" />
+    //         <p><input type="text" name="title" placeholder="title" value="${title}"/></p>
+    //         <p><textarea name="desc01" id="" cols="30" rows="10" placeholder="description">${description}</textarea></p>
+    //         <p>
+    //           <input type="submit" />
+    //         </p>
+    //       </form>
+    //       `,
+    //       `<a href="/create" title="create">create</a>
+    //       <a href="/update?id=${title}" title="update">update</a>`,
+    //       list
+    //     );
+    //     response.writeHead(200);
+    //     response.end(html);
+    //   });
+    // });
+    db.query(`select * from topic`, function(err, topics) {
+      if (err) {
+        console.log(`Error!!`);
+      }
+      // console.log(topics);
+      var title = queryData.id;
+      var description = topics;
+      var list = template.list(topics);
+      console.log(`title값 ${title}`);
+      console.log(`row값 ${rows}`);
+      var html = template.HTML(
+        title,
+        list,
+        `<h2>${title}</h2>`,
+        `
           <form action="/update_process" method="POST">
             <input type="hidden" name="id" value="${title}" /> 
             <p><input type="text" name="title" placeholder="title" value="${title}"/></p>
@@ -211,13 +243,11 @@ var app = http.createServer(function(request, response) {
             </p>
           </form>
           `,
-          `<a href="/create" title="create">create</a> 
-          <a href="/update?id=${title}" title="update">update</a>`,
-          list
-        );
-        response.writeHead(200);
-        response.end(html);
-      });
+        `<a href="/create" title="create">create</a> 
+          <a href="/update?id=${title}" title="update">update</a>`
+      );
+      response.writeHead(200);
+      response.end(html);
     });
   } else if (pathName === `/update_process`) {
     var body = "";
