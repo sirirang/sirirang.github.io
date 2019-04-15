@@ -5,6 +5,7 @@ var qs = require("querystring");
 var template = require("./lib/template.js");
 var sanitizeHtml = require("sanitize-html");
 var mysql = require("mysql");
+
 var db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -219,45 +220,38 @@ var app = http.createServer(function(request, response) {
     //     response.end(html);
     //   });
     // });
-    db.query(`select * from topic`, function(err, topics) {
-      if (err) {
-        console.log(`Error!!`);
-      }
-      db.query(`SELECT * FROM topic WHERE id=?`, [queryData.id], function(
-        err2,
-        topic
-      ) {
-        if (err2) {
-          console.log(err2);
+    db.query(`SELECT * FROM topic`,function(err,topics){
+        if(err){
+            console.log(`ERROR!! 1`);
         }
-        console.log(topic[0]);
-        var list = template.list(topics);
-        var html = template.HTML(
-          topic[0].title,
-          list,
-          `<h2>${topic[0].id}</h2>`,
-          `
-          <form action="/update_process" method="POST">
-            <input type="hidden" name="id" value="${topic[0].id}" /> 
-            <p><input type="text" name="title" placeholder="title" value="${
-              topic[0].title
-            }"/></p>
-            <p><textarea name="desc01" id="" cols="30" rows="10" placeholder="description">${
-              topic[0].description
-            }</textarea></p>
-            <p>
-              <input type="submit" />
-            </p>
-          </form>
-          `,
-          `<a href="/create" title="create">create</a> 
-          <a href="/update?id=${title}" title="update">update</a>`
-        );
-        response.writeHead(200);
-        response.end(html);
-      });
-      // console.log(topics);
+        db.query(`SELECT * FROM topic WHERE title=?`, [queryData.id], function(err2,topic){
+            if(err2){
+                console.log(`ERROR!! 2`);
+            }
+            console.log(topic);
+            console.log(queryData.id);
+            var list = template.list(topics);
+            var html = template.HTML(
+            list,
+            `<h2>${topic[0].title}</h2>`,
+            `
+            <form action="/update_process" method="POST">
+                <input type="hidden" name="id" value="${topic[0].id}" /> 
+                <p><input type="text" name="title" placeholder="title" value="${topic[0].title}"/></p>
+                <p><textarea name="desc01" id="" cols="30" rows="10" placeholder="description">${topic[0].description}</textarea></p>
+                <p>
+                <input type="submit" />
+                </p>
+            </form>
+            `,
+            `<a href="/create" title="create">create</a> 
+            <a href="/update?id=${topic[0].id}" title="update">update</a>`
+            );
+            response.writeHead(200);
+            response.end(html);
+        });
     });
+      // console.log(topics);
   } else if (pathName === `/update_process`) {
     var body = "";
     request.on("data", function(data) {
@@ -265,15 +259,20 @@ var app = http.createServer(function(request, response) {
     });
     request.on("end", function() {
       var post = qs.parse(body);
-      var id = post.id;
-      var title = post.title;
-      var desc = post.desc01;
-      fs.rename(`data/${id}`, `data/${title}`, function(err) {
-        fs.writeFile(`data/${title}`, `${desc}`, "utf8", function(err) {
-          response.writeHead(302, { location: `/?id=${title}` });
-          response.end();
-        });
-      });
+      console.log(post);
+    //   var id = post.id;
+    //   var title = post.title;
+    //   var desc = post.desc01;
+    //   fs.rename(`data/${id}`, `data/${title}`, function(err) {
+    //     fs.writeFile(`data/${title}`, `${desc}`, "utf8", function(err) {
+    //       response.writeHead(302, { location: `/?id=${title}` });
+    //       response.end();
+    //     });
+    //   });
+        db.query('UPDATE topic SET title=?, description=?, author_id=1 WHERE id=?', [post.title, post.desc01, post.id], function(error, result){
+            response.writeHead(302, {Location: `/?id=${post.id}`});
+            response.end();
+          })
     });
   } else if (pathName === `/delete_process`) {
     var body = "";
@@ -282,11 +281,16 @@ var app = http.createServer(function(request, response) {
     });
     request.on("end", function() {
       var post = qs.parse(body);
-      var id = post.id;
-      fs.unlink(`data/${id}`, function(err) {
-        response.writeHead(302, { location: `/` });
-        response.end();
-      });
+    //   var id = post.id;
+    //   fs.unlink(`data/${id}`, function(err) {
+    //     response.writeHead(302, { location: `/` });
+    //     response.end();
+    //   });
+    console.log(post);
+        db.query(`DELETE FROM topic WHERE title=?`,[post.id],function(err,result){
+            response.writeHead(302, { location: `/` });
+            response.end();
+        });
     });
   } else {
     response.writeHead(404);
