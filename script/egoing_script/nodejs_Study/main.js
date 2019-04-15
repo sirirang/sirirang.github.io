@@ -223,31 +223,40 @@ var app = http.createServer(function(request, response) {
       if (err) {
         console.log(`Error!!`);
       }
-      // console.log(topics);
-      var title = queryData.id;
-      var description = topics;
-      var list = template.list(topics);
-      console.log(`title값 ${title}`);
-      console.log(`row값 ${rows}`);
-      var html = template.HTML(
-        title,
-        list,
-        `<h2>${title}</h2>`,
-        `
+      db.query(`SELECT * FROM topic WHERE id=?`, [queryData.id], function(
+        err2,
+        topic
+      ) {
+        if (err2) {
+          console.log(err2);
+        }
+        console.log(topic[0]);
+        var list = template.list(topics);
+        var html = template.HTML(
+          topic[0].title,
+          list,
+          `<h2>${topic[0].id}</h2>`,
+          `
           <form action="/update_process" method="POST">
-            <input type="hidden" name="id" value="${title}" /> 
-            <p><input type="text" name="title" placeholder="title" value="${title}"/></p>
-            <p><textarea name="desc01" id="" cols="30" rows="10" placeholder="description">${description}</textarea></p>
+            <input type="hidden" name="id" value="${topic[0].id}" /> 
+            <p><input type="text" name="title" placeholder="title" value="${
+              topic[0].title
+            }"/></p>
+            <p><textarea name="desc01" id="" cols="30" rows="10" placeholder="description">${
+              topic[0].description
+            }</textarea></p>
             <p>
               <input type="submit" />
             </p>
           </form>
           `,
-        `<a href="/create" title="create">create</a> 
+          `<a href="/create" title="create">create</a> 
           <a href="/update?id=${title}" title="update">update</a>`
-      );
-      response.writeHead(200);
-      response.end(html);
+        );
+        response.writeHead(200);
+        response.end(html);
+      });
+      // console.log(topics);
     });
   } else if (pathName === `/update_process`) {
     var body = "";
