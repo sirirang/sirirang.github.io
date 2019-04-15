@@ -23,6 +23,22 @@ var template = {
     }
     list = list + `</ul>`;
     return list;
+  },
+  authorSelect: function(author, author_id){
+    var tag = '';
+    for(var i =0; i < author.length;i++) {
+        var selected = '';
+        if(author[i].id === author_id){
+            selected = ` selected`
+        }
+        tag += `<option value="${author[i].id}" ${selected}>${author[i].name}</option>`
+        
+    }
+    return `
+    <select name="author">
+        ${tag}
+    </select>
+    `
   }
 };
 
