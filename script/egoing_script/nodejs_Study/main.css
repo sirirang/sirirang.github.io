@@ -1,0 +1,4 @@
+@charset "utf-8";
+
+.tbl_author {border-collapse: collapse}
+.tbl_author td {border:1px solid #000;}
