@@ -7,13 +7,16 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon main.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.16.4",
     "install": "^0.12.2",
     "mysql": "^2.16.0",
+    "nodemon": "^1.18.9",
     "oracledb": "^3.1.2",
     "pm": "^2.2.6",
     "sanitize-html": "^1.20.0"
