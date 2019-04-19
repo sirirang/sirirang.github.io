@@ -6,6 +6,7 @@ module.exports = {
     <head>
       <title>WEB1 - ${title}</title>
       <meta charset="utf-8">
+      <link rel="stylesheet" href="/css/common.css" type="text/css">
     </head>
     <body>
       <h1><a href="/">WEB</a></h1>
