@@ -5,9 +5,18 @@ const compression = require('compression');
 const app = express();
 const port = 3000;
 const pageRouter = require('./routes/page.js');
+const authRouter = require('./routes/auth.js');
 const indexRouter = require('./routes/index.js');
 const helmet = require('helmet');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 
+app.use(session({
+    secret: '1231231awe!@#QSDSA!@A',
+    resave: false,
+    saveUninitialized: true,
+    store:new FileStore()
+  }))
 app.use(helmet());
 app.use(express.static('static'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,6 +30,7 @@ app.get('*', function(req,res,next){
 
 app.use('/', indexRouter);
 app.use('/page', pageRouter);
+app.use('/auth', authRouter);
 
 app.use(function(req,res,next){
     res.status(404).send(`Sorry!`);

@@ -1,5 +1,5 @@
 module.exports = {
-  HTML:function(title, list, body, control){
+  HTML:function(title, list, body, control, authStatusUI = `<a href="/auth/login" title="">Login</a>`){
     return `
     <!doctype html>
     <html>
@@ -9,10 +9,11 @@ module.exports = {
       <link rel="stylesheet" href="/css/common.css" type="text/css">
     </head>
     <body>
-      <h1><a href="/">WEB</a></h1>
-      ${list}
-      ${control}
-      ${body}
+        <h1><a href="/">WEB</a></h1>
+        ${authStatusUI}
+        ${list}
+        ${control}
+        ${body}
     </body>
     </html>
     `;

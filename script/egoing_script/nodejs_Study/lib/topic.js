@@ -182,3 +182,58 @@ exports.delete = function(request, response){
           });
       });
 } 
+
+exports.login = function(request, response){
+    db.query(`select * from topic`, function(err, topics) {
+        if (err) {
+          console.log(`Error!!`);
+        }
+        // console.log(topics);
+        var title = "Login";
+        var list = template.list(topics);
+        var html = template.HTML(
+          title,
+          `<h2>${sanitizeHtml(title)}</h2>`,
+          `<form action="/login_process" method="post">
+            <p><input type="text" name="email" placeholder="email"/></p>
+            <p><input type="password" name="password" placeholder="password"/></p>
+            <input type="submit" placeholder="email"/>
+          </form>
+          `,
+          `<a href="/create" title="create">create</a>`,
+          list
+        );
+        response.writeHead(200);
+        response.end(html);
+    });
+}
+
+
+exports.login_process = function(request, response){
+    var body = '';
+      request.on('data', function(data){
+          body = body + data;
+      });
+      request.on('end', function(){
+          var post = qs.parse(body);
+          db.query('SELECT * FROM user_info', function(error, result){
+            var inst_id = post.email;
+            var inst_pass = post.password;
+            for(var i = 0; i < result.length;i++){
+                if(result[i].id_info === inst_id && result[i].password === inst_pass){
+                    console.log(`hello ${inst_id}!`);
+                }else{
+                    console.log(`Try again`);
+                }
+            }
+            response.writeHead(302, {
+                'SET-Cookie':[
+                    `email=${inst_id}`,
+                    `password=${inst_pass}`
+                ],
+                Location:`/`
+            });
+            response.end();
+          });
+      });
+}

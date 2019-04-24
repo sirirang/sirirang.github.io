@@ -14,6 +14,7 @@ var template = {
         </style>
       </head>
       <body>
+        <a href="/login" title="">login</a>
         <h1><a href="/">WEB</a></h1>
         <a href="/authors">Authors</a>
         ${control}    

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const template = require('../lib/template.js');
+const auth = require('../lib/auth.js');
 
 //app.get('/', (req, res) => res.send('Hello World!'));
 //하단과 동일함 
@@ -13,7 +14,8 @@ router.get('/',function(req, res){
         `<h2>${title}</h2>${description}<br />
         <img src="/images/sleep.jpg" class="sleep" alt=""/>
         `,
-        `<a href="/create">create</a>`
+        `<a href="/page/create">create</a>`,
+        auth.authStatus(req,res)
     );
     res.send(html);
 });
