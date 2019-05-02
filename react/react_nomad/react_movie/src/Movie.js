@@ -6,11 +6,11 @@ class Movie extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     poster: PropTypes.string.isRequired,
-    genres: PropTypes.string.isRequired,
-    synopsis: PropTypes.string.isRequired
+    // genres: PropTypes.string.isRequired,
   };
   render() {
-    console.log(this.props.genres);
+    // const overview = [this.props.genres];
+    // console.log(overview);
     return (
       <div className="Movie">
         <div className="Movie__Columns">
@@ -18,15 +18,17 @@ class Movie extends Component {
         </div>
         <div className="Movie__Columns">
           <h1>{this.props.title}</h1>
-          <div className="Movie__Genres">
+          
+          {/* <div className="Movie__Genres">
             {this.props.genres.map((genres, index) => {
               return <MovieGenre genres={genres} key={index} />;
             })}
-          </div>
+          </div> */}
+
           <div className="Movie__synopsis">
             <LinesEllipsis
               text={this.props.synopsis}
-              maxLine="3"
+              maxLine="2"
               ellipsis="..."
               trimRight
               basedOn="letters"
@@ -51,12 +53,12 @@ class MoviePoster extends Component {
   }
 }
 
-function MovieGenre({ genres }) {
-  return <span className="Movie__Genre">{genres}</span>;
-}
+// function MovieGenre({ genres }) {
+//   return <span className="Movie__Genre">{genres}</span>;
+// }
 
-MovieGenre.propTypes = {
-  genres: PropTypes.string.isRequired
-};
+// MovieGenre.propTypes = {
+//   genres: PropTypes.string.isRequired
+// };
 
 export default Movie;

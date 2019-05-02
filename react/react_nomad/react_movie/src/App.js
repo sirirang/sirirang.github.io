@@ -3,7 +3,11 @@ import "./App.css";
 import "./Movie.css";
 import MovieShow from "./Movie";
 
-const API_KEY = "https://yts.am/api/v2/list_movies.json?sort_by=download_count";
+const lang = `ko-KR`;
+// const API_KEY = `1a551d962f223bf61e6db7f8d0c4a749`;
+const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=1a551d962f223bf61e6db7f8d0c4a749&language=${lang}`;
+const IMG_URL = `https://image.tmdb.org/t/p/w300_and_h450_bestv2`;
+// const genre_ids = `https://api.themoviedb.org/3/genre/movie/list?api_key=9d58f50eea3bc0cebe233c422bbef69e&language=ko-KR&page=1`
 
 class App extends Component {
   // Render : componentWillMount() -> render() -> componentDidMount()
@@ -36,7 +40,7 @@ class App extends Component {
   //     },3000);
   // }
 
-  state = {};
+
   // componentDidMount() {
   //   fetch(API_KEY) // fetch로 api 내용을 가져와라
   //     .then(res => res.json()) // 위에 작업이 끝나면 then 안에 있는 내용을 진행해라
@@ -45,20 +49,22 @@ class App extends Component {
   //    계속해서 then 을 사용하게 되면 CallBack HELL 이 되어버림 그래서 함수들을 만들어서 작업진행
   // }
 
+  state = {};
+
   componentDidMount() {
     this._getMovies();
   }
 
   _renderMovies = () => {
     const movies = this.state.movies.map(movie => {
-      console.log(movie);
+        // console.log(movie);
       return (
         <MovieShow
           key={movie.id}
           title={movie.title}
-          poster={movie.medium_cover_image}
-          genres={movie.genres}
-          synopsis={movie.synopsis}
+          poster={`${IMG_URL}${movie.poster_path}`}
+          synopsis={movie.overview}
+          //genres={movie.genre_ids}
         />
       );
     });
@@ -73,14 +79,15 @@ class App extends Component {
   };
 
   _callApi = () => {
-    return fetch(API_KEY) // fetch로 api 내용을 가져와라
+    return fetch(API_URL) // fetch로 api 내용을 가져와라
       .then(res => res.json()) // 위에 작업이 끝나면 then 안에 있는 내용을 진행해라
-      .then(json => json.data.movies) // 위에 작업이 끝나면 then 안에 있는 내용을 진행해라
+      .then(json => json.results) // 위에 작업이 끝나면 then 안에 있는 내용을 진행해라
       .catch(err => console.log(err)); // fetch에서 api 내용을 가져오지 못하면 error를 내라
   };
 
   render() {
     const { movies } = this.state;
+    console.log(movies);
     return (
       <div className={movies ? "App" : "App--loading"}>
         {this.state.movies ? this._renderMovies() : "Loading"}
